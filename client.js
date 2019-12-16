@@ -63,6 +63,57 @@ function postInfantDeathData(){
     request.send()
 }
 
+//INSERTING AND UPDATING INFANT HEALTH DETAILS
+function postInfantHealthData(){
+ 
+    var InfantHospitalId = document.getElementById("infantHospitalId").value;
+    var Eyes = document.getElementById("eyes").value;
+    var Hearing = document.getElementById("hearing").value;
+    var Brain = document.getElementById("brain").value;
+    var Heart = document.getElementById("heart").value;
+    var Metabolism = document.getElementById("metabolism").value;
+    var BodySkin = document.getElementById("body").value;
+
+ 
+    request.open('POST', 'http://localhost:5000/addEditInfantHealthData?InfantHospitalId='+InfantHospitalId+'&Eyes='+Eyes+
+    '&Hearing='+Hearing+'&Brain='+Brain+'&Heart='+Heart+'&Metabolism='+Metabolism+'&BodySkin='+BodySkin+'', true)
+
+    request.send()
+}
+
+
+
+//INSERTING AND UPDATING MOTHER HEALTH DETAILS
+function postMotherHealthData(){
+ 
+    var InfantHospitalId = document.getElementById("infantHospitalId").value;
+    var MotherHeart = document.getElementById("mheart").value;
+    var MotherMetabolism = document.getElementById("metabolism").value;
+    var MotherMentalHealth = document.getElementById("mentalhealth").value;
+    var BloodPressure = document.getElementById("bp").value;
+
+ 
+    request.open('POST', 'http://localhost:5000/addEditMotherHealthData?InfantHospitalId='+InfantHospitalId+'&Heart='+MotherHeart+
+    '&Metabolism='+MotherMetabolism+'&MentalHealth='+MotherMentalHealth+'&BloodPressure='+BloodPressure+'', true)
+
+    request.send()
+}
+
+
+//INSERTING AND UPDATING MOTHER DEATH DETAILS
+function postMotherDeathData(){
+ 
+    var InfantHospitalId = document.getElementById("infantHospitalId").value;
+    var MotherDeathDate = document.getElementById("motherdeathdate").value;
+    var MotherDeathReason = document.getElementById("motherreason").value;
+
+ 
+    request.open('POST', 'http://localhost:5000/addEditMotherDeathData?InfantHospitalId='+InfantHospitalId+'&DeathDateTime='+MotherDeathDate+
+    '&Reason='+MotherDeathReason+'', true)
+
+    request.send()
+}
+
 
 
  

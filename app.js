@@ -193,6 +193,9 @@ app.post('/addEditInfantData', (req, res) => {
 
 
 
+
+
+
 // FOR ADDING AND EDITING INFANT DEATH DETAILS
 
 
@@ -202,18 +205,24 @@ app.post('/addEditInfantDeathData', (req, res) => {
    var infantDeathEditArray = [];
    var foundData
    var findInfIdQuery= {InfantHospitalId:infDeathData["InfantHospitalId"]};
+   var infantMainFName;
+   var infantMainLName;
+   var infantMainAddress;
   
    // Finding existing infant id for update
    mydatabase.collection("InfantDeathDetails").find(findInfIdQuery).toArray (function(err, result) {
       if (err) throw err;
       foundData = result.length;
-   });
+  
+
+   
+
    // Update existing details
    if(foundData > 0){
    
       var myquery = { InfantHospitalId: infDeathData["InfantHospitalId"] };
       if(infDeathData["DeathDateTime"]!=""){
-         parentEditArray.push({DeathDateTime:infDeathData["DeathDateTime"]}) 
+         infantDeathEditArray.push({DeathDateTime:infDeathData["DeathDateTime"]}) 
        }
        if(infDeathData["Reason"]!=""){
          infantDeathEditArray.push({Reason:infDeathData["Reason"]}) 
@@ -232,21 +241,309 @@ app.post('/addEditInfantDeathData', (req, res) => {
 
    }else{
        
-      var InfantDeathInsertData = [{InfantHospitalId:infDeathData["InfantHospitalId"],Reason:infDeathData["Reason"],DeathDateTime:infDeathData["DeathDateTime"]
+          // Finding existing infant id for update
+          var findInfIdQuery= {InfantHospitalId:infDeathData["InfantHospitalId"]};
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+     
+      infantMainFName = result[0]["InfantFName"];
+      infantMainLName = result[0]["InfantLName"];
+      infantMainAddress = result[0]["Address"];
+      
+   
+  
+      var InfantDeathInsertData = [{InfantFtName:infantMainFName,InfantLName:infantMainLName,
+                           Address:infantMainAddress,InfantHospitalId:infDeathData["InfantHospitalId"],Reason:infDeathData["Reason"],DeathDateTime:infDeathData["DeathDateTime"]
       }];
       mydatabase.collection("InfantDeathDetails").insertMany(InfantDeathInsertData, function(err, res) {
          if (err) throw err;
          console.log("Number of documents inserted: " + res.insertedCount);
        
-       });     
-   }
+       });   
+       
+      });
 
+  
+   }
+});
 
    res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
  
    res.end();
    
 });
+
+// FOR ADDING AND EDITING INFANT MOTHER DEATH DETAILS
+
+
+app.post('/addEditMotherDeathData', (req, res) => {
+
+   const motherDeathData = req.query;
+   var mothertDeathEditArray = [];
+   var foundData
+   var findInfIdQuery= {InfantHospitalId:motherDeathData["InfantHospitalId"]};
+   var infantMainFName;
+   var infantMainLName;
+   var infantMainAddress;
+   var motherFName;
+   var motherLName;
+  
+  
+   // Finding existing infant id for update
+   mydatabase.collection("InfantMotherDeathDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+      foundData = result.length;
+  
+
+   
+
+   // Update existing details
+   if(foundData > 0){
+   
+      var myquery = { InfantHospitalId: motherDeathData["InfantHospitalId"] };
+      if(motherDeathData["DeathDateTime"]!=""){
+         mothertDeathEditArray.push({DeathDateTime:motherDeathData["DeathDateTime"]}) 
+       }
+       if(motherDeathData["Reason"]!=""){
+         mothertDeathEditArray.push({Reason:motherDeathData["Reason"]}) 
+       }
+
+       for(var j=0;j<mothertDeathEditArray.length;j++){
+ 
+         var motherNewDeathvalues = { $set: mothertDeathEditArray[j] };
+         mydatabase.collection("InfantMotherDeathDetails").updateOne(myquery, motherNewDeathvalues, function(err, res) {
+              if (err) throw err;
+         
+             
+                  
+            });  
+         }  
+
+   }else{
+       
+          // Finding existing infant id for update
+          var findInfIdQuery= {InfantHospitalId:motherDeathData["InfantHospitalId"]};
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+     
+      infantMainFName = result[0]["InfantFName"];
+      infantMainLName = result[0]["InfantLName"];
+      infantMainAddress = result[0]["Address"];
+
+      mydatabase.collection("NewBornInfantsParentsDetails").find(findInfIdQuery).toArray (function(err, result) {
+         if (err) throw err;
+        
+         motherFName= infantMainFName = result[0]["MotherFName"];
+         motherLName=infantMainLName = result[0]["MotherLName"];
+         
+      
+   
+  
+      var MotherDeathInsertData = [{InfantHospitalId:motherDeathData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+                           Address:infantMainAddress,MotherFName:motherFName,MotherLName:motherLName,Reason:motherDeathData["Reason"],DeathDateTime:motherDeathData["DeathDateTime"]
+      }];
+      mydatabase.collection("InfantMotherDeathDetails").insertMany(MotherDeathInsertData, function(err, res) {
+         if (err) throw err;
+         console.log("Number of documents inserted: " + res.insertedCount);
+       
+       });   
+      });   
+       
+      });
+
+  
+   }
+});
+
+   res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
+ 
+   res.end();
+   
+});
+
+
+
+/// ADDING AND EDITING INFANT HEALTH DETAILS
+app.post('/addEditInfantHealthData', (req, res) => {
+
+   const infHealthData = req.query;
+   var infantHealthEditArray = [];
+   var foundData
+   var findInfIdQuery= {InfantHospitalId:infHealthData["InfantHospitalId"]};
+   var infantMainFName;
+   var infantMainLName;
+   var infantMainAddress;
+  
+   // Finding existing infant id for update
+   mydatabase.collection("NewBornInfantsHealthDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+      foundData = result.length;
+  
+
+   
+
+   // Update existing details
+   if(foundData > 0){
+   
+      var myquery = { InfantHospitalId: infHealthData["InfantHospitalId"] };
+      if(infHealthData["Eyes"]!=""){
+         infantHealthEditArray.push({Eyes:infHealthData["Eyes"]}) 
+       }
+       if(infHealthData["Hearing"]!=""){
+         infantHealthEditArray.push({Hearing:infHealthData["Hearing"]}) 
+       }
+       if(infHealthData["Brain"]!=""){
+         infantHealthEditArray.push({Brain:infHealthData["Brain"]}) 
+       }
+       if(infHealthData["Heart"]!=""){
+         infantHealthEditArray.push({Heart:infHealthData["Heart"]}) 
+       }if(infHealthData["Metabolism"]!=""){
+         infantHealthEditArray.push({Metabolism:infHealthData["Metabolism"]}) 
+       }
+       if(infHealthData["BodySkin"]!=""){
+         infantHealthEditArray.push({BodySkin:infHealthData["BodySkin"]}) 
+       }
+
+       for(var j=0;j<infantHealthEditArray.length;j++){
+ 
+         var infantNewHealthvalues = { $set: infantHealthEditArray[j] };
+         mydatabase.collection("NewBornInfantsHealthDetails").updateOne(myquery, infantNewHealthvalues, function(err, res) {
+              if (err) throw err;
+         
+             
+                  
+            });  
+         }  
+
+   }else{
+       
+          // Finding existing infant id for update
+          var findInfIdQuery= {InfantHospitalId:infHealthData["InfantHospitalId"]};
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+     
+      infantMainFName = result[0]["InfantFName"];
+      infantMainLName = result[0]["InfantLName"];
+      infantMainAddress = result[0]["Address"];
+      
+   
+  
+      var InfantHealthInsertData = [{InfantHospitalId:infHealthData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+                           Address:infantMainAddress,Eyes:infHealthData["Eyes"],Hearing:infHealthData["Hearing"],Brain:infHealthData["Brain"],Heart:infHealthData["Heart"]
+                           ,Metabolism:infHealthData["Metabolism"],BodySkin:infHealthData["BodySkin"]
+      }];
+      mydatabase.collection("NewBornInfantsHealthDetails").insertMany(InfantHealthInsertData, function(err, res) {
+         if (err) throw err;
+         console.log("Number of documents inserted: " + res.insertedCount);
+       
+       });   
+       
+      });
+
+  
+   }
+});
+
+   res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
+ 
+   res.end();
+   
+});
+
+
+
+
+
+/// ADDING AND EDITING MOTHER HEALTH DETAILS
+app.post('/addEditMotherHealthData', (req, res) => {
+
+   const motherHealthData = req.query;
+   var motherHealthEditArray = [];
+   var foundData
+   var findInfIdQuery= {InfantHospitalId:motherHealthData["InfantHospitalId"]};
+   var infantMainFName;
+   var infantMainLName;
+   var infantMainAddress;
+   var motherFName;
+   var motherLName;
+  
+   // Finding existing infant id for update
+   mydatabase.collection("NewBornInfantsMotherHealthDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+      foundData = result.length;
+  
+
+   
+
+   // Update existing details
+   if(foundData > 0){
+   
+      var myquery = { InfantHospitalId: motherHealthData["InfantHospitalId"] };
+      if(motherHealthData["Heart"]!=""){
+         motherHealthEditArray.push({Heart:motherHealthData["Heart"]}) 
+       }
+       if(motherHealthData["Metabolism"]!=""){
+         motherHealthEditArray.push({Metabolism:motherHealthData["Metabolism"]}) 
+       }
+       if(motherHealthData["MentalHealth"]!=""){
+         motherHealthEditArray.push({MentalHealth:motherHealthData["MentalHealth"]}) 
+       }
+       if(motherHealthData["BloodPressure"]!=""){
+         motherHealthEditArray.push({BloodPressure:motherHealthData["BloodPressure"]}) 
+       }
+
+       for(var j=0;j<motherHealthEditArray.length;j++){
+ 
+         var motherNewHealthvalues = { $set: motherHealthEditArray[j] };
+         mydatabase.collection("NewBornInfantsMotherHealthDetails").updateOne(myquery, motherNewHealthvalues, function(err, res) {
+              if (err) throw err;
+         
+             
+                  
+            });  
+         }  
+
+   }else{
+       
+          // Finding existing infant id for update
+          var findInfIdQuery= {InfantHospitalId:motherHealthData["InfantHospitalId"]};
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+     
+      infantMainFName = result[0]["InfantFName"];
+      infantMainLName = result[0]["InfantLName"];
+      infantMainAddress = result[0]["Address"];
+      
+      mydatabase.collection("NewBornInfantsParentsDetails").find(findInfIdQuery).toArray (function(err, result) {
+         if (err) throw err;
+        
+         motherFName= infantMainFName = result[0]["MotherFName"];
+         motherLName=infantMainLName = result[0]["MotherLName"];
+  
+      var InfantHealthInsertData = [{InfantHospitalId:motherHealthData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+                           Address:infantMainAddress,MotherFName:motherFName,MotherLName:motherLName,Heart:motherHealthData["Heart"],
+                           Metabolism:motherHealthData["Metabolism"],MentalHealth:motherHealthData["MentalHealth"],BloodPressure:motherHealthData["BloodPressure"]
+      }];
+      mydatabase.collection("NewBornInfantsMotherHealthDetails").insertMany(InfantHealthInsertData, function(err, res) {
+         if (err) throw err;
+         console.log("Number of documents inserted: " + res.insertedCount);
+       
+       });   
+      });   
+       
+      });
+
+  
+   }
+});
+
+   res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
+ 
+   res.end();
+   
+});
+
+
 
 
 
