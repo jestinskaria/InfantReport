@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const MongoClient = require('mongodb').MongoClient;
 
-
+var currentDateValue = CurrentDateTime();
 
 // CONNECTING MONGO DB
 const uri = "mongodb+srv://jestin:root@infantcare-tzbj0.mongodb.net/InfantDatabase?retryWrites=true&w=majority"
@@ -28,6 +28,8 @@ MongoClient.connect(uri,{ useUnifiedTopology: true }, function(err, client) {
 
 
 
+
+ //AUTHOR : JESTIN SKARIA  
 
 // ADDING and EDITING INFANT DETAILS TO DB
 
@@ -196,6 +198,14 @@ app.post('/addEditInfantData', (req, res) => {
 
 
 
+
+
+
+
+
+
+//AUTHOR: JESTIN SKARIA
+
 // FOR ADDING AND EDITING INFANT DEATH DETAILS
 
 
@@ -252,7 +262,7 @@ app.post('/addEditInfantDeathData', (req, res) => {
       
    
   
-      var InfantDeathInsertData = [{InfantFtName:infantMainFName,InfantLName:infantMainLName,
+      var InfantDeathInsertData = [{InfantFName:infantMainFName,InfantLName:infantMainLName,
                            Address:infantMainAddress,InfantHospitalId:infDeathData["InfantHospitalId"],Reason:infDeathData["Reason"],DeathDateTime:infDeathData["DeathDateTime"]
       }];
       mydatabase.collection("InfantDeathDetails").insertMany(InfantDeathInsertData, function(err, res) {
@@ -266,6 +276,171 @@ app.post('/addEditInfantDeathData', (req, res) => {
   
    }
 });
+
+   res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
+ 
+   res.end();
+   
+});
+
+
+
+
+
+
+
+
+
+
+//  TRANSFER INFANT OPERATION
+app.post('/transferInfant', (req, res) => {
+
+   const infantData = req.query;
+   var infantDeathEditArray = [];
+   var foundData
+   var findInfIdQuery= {InfantHospitalId:infantData["InfantHospitalId"]};
+   var infantMainFName;
+   var infantMainLName;
+   var infantMainAddress;
+  
+   // Finding existing infant id for update
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+      foundData = result.length;
+  
+ 
+   if(foundData > 0){
+   var transferInsertData=[{InfantHospitalId:infantData["InfantHospitalId"],InfantFName:result[0]["InfantFirstName"],InfantLName:result[0]["InfantLastName"],
+   Gender:result[0]["Gender"],BirthDateTime:result[0]["BirthDateTime"],ToHospitalName:infantData["ToHospitalName"],
+   ToHospitalAddress:infantData["ToHospitalAddress"],TransferDate:currentDateValue}];
+
+   mydatabase.collection("InfantHospitalTransferDetails").insertMany(transferInsertData, function(err, res) {
+      if (err) throw err;
+      console.log("Number of documents inserted: " + res.insertedCount);
+
+      mydatabase.collection("NewBornInfantsDetails").deleteOne(findInfIdQuery, function(err, obj) {
+         if (err) throw err;
+         console.log("1st document deleted");
+
+
+         mydatabase.collection("NewBornInfantsParentsDetails").deleteOne(findInfIdQuery, function(err, obj) {
+            if (err) throw err;
+            console.log("1st document deleted");
+           
+          });
+        
+       });
+
+
+    
+    });   
+      
+
+   }
+
+});   
+
+
+
+   res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
+ 
+   res.end();
+   
+});
+
+
+
+
+
+
+
+
+
+
+
+//  DISCHARGE INFANT OPERATION
+app.post('/dischargeInfant', (req, res) => {
+
+   const infantData = req.query;
+   var infantDeathEditArray = [];
+   var foundData
+   var findInfIdQuery= {InfantHospitalId:infantData["InfantHospitalId"]};
+     console.log(findInfIdQuery)
+  
+   mydatabase.collection("NewBornInfantsDetails").find(findInfIdQuery).toArray (function(err, result) {
+      if (err) throw err;
+      foundData = result.length;
+  if(foundData>0){
+ 
+  
+   var DischargeInsertData=[{InfantHospitalId:infantData["InfantHospitalId"],InfantFName:result[0]["InfantFName"],InfantLName:result[0]["InfantLName"],
+   Gender:result[0]["Gender"],BirthDateTime:result[0]["BirthDateTime"],DischargeDate:currentDateValue}];
+
+   mydatabase.collection("DischargedInfantDetails").insertMany(DischargeInsertData, function(err, res) {
+      if (err) throw err;
+      console.log("Number of documents inserted: " + res.insertedCount);
+    
+      mydatabase.collection("NewBornInfantsParentsDetails").find(findInfIdQuery).toArray (function(err, result) {
+         if (err) throw err;
+         if(result.length >0) 
+         var DischargeInfantParentData = [{InfantHospitalId:infantData["InfantHospitalId"],FatherFName:result[0]["FatherFName"],FatherLName:result[0]["FatherLName"],
+         MotherFName:result[0]["MotherFName"],MotherLName:result[0]["MotherLName"],DischargeDate:currentDateValue}]
+         
+         mydatabase.collection("DischargedInfantsParentsDetails").insertMany(DischargeInfantParentData, function(err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+
+
+          mydatabase.collection("NewBornInfantsHealthDetails").find(findInfIdQuery).toArray (function(err, result) {
+               if (err) throw err;
+               if(result.length >0) 
+               var DischargeInfantHealthtData = [{InfantHospitalId:infantData["InfantHospitalId"],
+               Eyes:result[0]["Eyes"],Hearing:result[0]["Hearing"],Brain:result[0]["Brain"],Heart:result[0]["Heart"]
+               ,Metabolism:result[0]["Metabolism"],BodySkin:result[0]["BodySkin"],UpdatedDate:currentDateValue,DischargeDate:currentDateValue}]
+
+              if(result.length >0) 
+               mydatabase.collection("DischargedInfantsHealthDetails").insertMany(DischargeInfantHealthtData, function(err, res) {
+                  if (err) throw err;
+                  console.log("Number of documents inserted: " + res.insertedCount);      
+
+
+
+      mydatabase.collection("NewBornInfantsDetails").deleteOne(findInfIdQuery, function(err, obj) {
+         if (err) throw err;
+         console.log("1st document deleted");
+
+
+         mydatabase.collection("NewBornInfantsParentsDetails").deleteOne(findInfIdQuery, function(err, obj) {
+            if (err) throw err;
+            console.log("1st document deleted");
+            mydatabase.collection("NewBornInfantsHealthDetails").deleteOne(findInfIdQuery, function(err, obj) {
+               if (err) throw err;
+               console.log("1st document deleted");
+           
+          });
+          
+         });
+          
+      });
+          
+   });
+          
+});
+          
+});
+        
+      
+ });
+
+    
+    });   
+      
+
+  }
+
+});   
+
+
 
    res.writeHead(301,{Location: 'http://localhost/FinalProject/try.html'});
  
@@ -339,7 +514,7 @@ app.post('/addEditMotherDeathData', (req, res) => {
       
    
   
-      var MotherDeathInsertData = [{InfantHospitalId:motherDeathData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+      var MotherDeathInsertData = [{InfantHospitalId:motherDeathData["InfantHospitalId"],InfantFName:infantMainFName,InfantLName:infantMainLName,
                            Address:infantMainAddress,MotherFName:motherFName,MotherLName:motherLName,Reason:motherDeathData["Reason"],DeathDateTime:motherDeathData["DeathDateTime"]
       }];
       mydatabase.collection("InfantMotherDeathDetails").insertMany(MotherDeathInsertData, function(err, res) {
@@ -368,11 +543,12 @@ app.post('/addEditInfantHealthData', (req, res) => {
 
    const infHealthData = req.query;
    var infantHealthEditArray = [];
-   var foundData
+   var foundData;
    var findInfIdQuery= {InfantHospitalId:infHealthData["InfantHospitalId"]};
    var infantMainFName;
    var infantMainLName;
    var infantMainAddress;
+  
   
    // Finding existing infant id for update
    mydatabase.collection("NewBornInfantsHealthDetails").find(findInfIdQuery).toArray (function(err, result) {
@@ -410,7 +586,12 @@ app.post('/addEditInfantHealthData', (req, res) => {
          mydatabase.collection("NewBornInfantsHealthDetails").updateOne(myquery, infantNewHealthvalues, function(err, res) {
               if (err) throw err;
          
-             
+              mydatabase.collection("NewBornInfantsHealthDetails").updateOne(myquery, { $set:{UpdatedDate:currentDateValue}}, function(err, res) {
+               if (err) throw err;
+          
+              
+                   
+             });  
                   
             });  
          }  
@@ -428,9 +609,9 @@ app.post('/addEditInfantHealthData', (req, res) => {
       
    
   
-      var InfantHealthInsertData = [{InfantHospitalId:infHealthData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+      var InfantHealthInsertData = [{InfantHospitalId:infHealthData["InfantHospitalId"],InfantFName:infantMainFName,InfantLName:infantMainLName,
                            Address:infantMainAddress,Eyes:infHealthData["Eyes"],Hearing:infHealthData["Hearing"],Brain:infHealthData["Brain"],Heart:infHealthData["Heart"]
-                           ,Metabolism:infHealthData["Metabolism"],BodySkin:infHealthData["BodySkin"]
+                           ,Metabolism:infHealthData["Metabolism"],BodySkin:infHealthData["BodySkin"],UpdatedDate:currentDateValue
       }];
       mydatabase.collection("NewBornInfantsHealthDetails").insertMany(InfantHealthInsertData, function(err, res) {
          if (err) throw err;
@@ -520,7 +701,7 @@ app.post('/addEditMotherHealthData', (req, res) => {
          motherFName= infantMainFName = result[0]["MotherFName"];
          motherLName=infantMainLName = result[0]["MotherLName"];
   
-      var InfantHealthInsertData = [{InfantHospitalId:motherHealthData["InfantHospitalId"],InfantFtName:infantMainFName,InfantLName:infantMainLName,
+      var InfantHealthInsertData = [{InfantHospitalId:motherHealthData["InfantHospitalId"],InfantFName:infantMainFName,InfantLName:infantMainLName,
                            Address:infantMainAddress,MotherFName:motherFName,MotherLName:motherLName,Heart:motherHealthData["Heart"],
                            Metabolism:motherHealthData["Metabolism"],MentalHealth:motherHealthData["MentalHealth"],BloodPressure:motherHealthData["BloodPressure"]
       }];
@@ -548,71 +729,91 @@ app.post('/addEditMotherHealthData', (req, res) => {
 
 
 app.get('/getInfantData/',function(req,res) {
-   var type = req.query.type;
-   var infantHId =req.query.Id;
-   var infFName =req.query.Fname;
-   var infLName =req.query.Lname;
-
-   if(infantHId!=""){
+ 
+   const reqData = req.query;
+   console.log(reqData)
+   var type = reqData["type"];
+   var infantHId =reqData["Id"];
+   var infFName =reqData["FName"];
+   var infLName =reqData["LName"];
+   
+   if(infantHId!='' && infantHId!= 'undefined'){
      var findQuery= {InfantHospitalId:infantHId};
-   }else if(infFName!="" && infLName==""){
+   }else if((infFName!='' ||infFName!='undefined') && (infLName=='' || infLName=='undefined')){
       var findQuery= {InfantFName:infFName};
-   }else if(infFName =="" && infLName!=""){
+   }else if(infFName =='' && infLName!=''){
       var findQuery= {InfantLName:infLName};
    }else{
       var findQuery= {$and:[{InfantLName:infLName},{InfantFName:infFName}]};
    }
 
    
+   if(type == 1){
+      mydatabase.collection("NewBornInfantsHealthDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }else if(type == 2){
+      mydatabase.collection("NewBornInfantsMotherHealthDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+   else if(type == 3){
+      mydatabase.collection("InfantHospitalTransferDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+   else if(type == 4){
+      mydatabase.collection("DischargedInfantDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+   else if(type == 5){
+      mydatabase.collection("InfantVaccinationDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+   else if(type == 6){
+      mydatabase.collection("NewBornInfantsDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+   else if(type == 7){
+      mydatabase.collection("InfantMotherDeathDetails").find(findQuery).toArray (function(err, result) {
+         if (err) throw err;
+       
+         let body = result;
+         res.write(JSON.stringify(body));
+         res.end();
+      });
+   }
+
+
+   
 });
-
-
-
-//  FETCHING INFANT DETAILS
-
-
-
- //   <td>${result[l].["InfantFName"]}</td>
-      //   <td>${result[l].["InfantLName"]}</td>
-app.post('/getInfantData', (req, res) => {
-
-   const reportData = req.body;
-    console.log(reportData);
-   var infData = [];
-    mydatabase.collection("NewBornInfantsDetails").find({ InfantFName:reportData["InfantFirstName"]}).toArray (function(err, result) {
-      if (err) throw err;
-      
-      infData = result
-      console.log(infData);
-      client.close();
-    
-
-   //  const x = ` <table id="infantReport" style="width:100%">
-   //    <caption>Infant Data</caption>
-   //    <tr>
-   //      <th>Infant Hospital Id</th>
-   //      <th>Infant Fist Name</th>
-   //      <th>Infant Last Name</th>
-   //    </tr>`
-   //  for (var l=0 ;l<infData.length;l++) {
-   //   const y =`
-   //    <tr>
-   //      <td>${infData[l]}</td>
-     
-   //    </tr>
-      
-   //  </table>`
-
-   //  document.getElementById('infantReport').innerHTML = document.getElementById('infantReport').innerHTML + x + y;
-   //  }
-   });
-   res.writeHead(301,{Location: 'http://localhost/FinalProject/get.html'});
-   res.end();
-});
-
-
-
-
 
 
 

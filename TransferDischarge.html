@@ -1,10 +1,10 @@
 <html>
     <title>
-        Add/Edit Mother Health Details
+        Discharge/Transfer Details
     </title>
-     <script src="client.js"></script>
    <!-- <head>
-        <h1 style="margin-left: 30px;">Infant Mother Health Details</h1>
+    <h1 style="margin-left: 240px;">Discharge/Transfer Details
+        </h1>
     </head>-->
     <head>
         <script src="client.js"></script>
@@ -21,7 +21,7 @@
       }
       .bg-img {
         /* The image used */
-        background-image: url("images/new6.jpg");
+        background-image: url("images/new8.jpg");
       
         /* Control the height of the image */
         min-height: 380px;
@@ -50,38 +50,37 @@
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-body bg-img " >
-                <h1  style="color:black;text-align:  left;margin-top: 20px;margin-left: 20px;">ADD MOTHER HEALTH DETAILS</h1><BR>
-        <div  style="margin-top: 20px;margin-left: 20px;">
+                <h1  style="color:black;text-align:  left;margin-top: 20px;margin-left: 20px;">TRANSFER-DISCHARGE  DETAILS</h1><BR>
+        <div  style="margin-top: 20px;margin-left: 20px;margin-right: 700px;"><br>
              <table>
                     <tr>
                         <td><label>Infant Hospital Id &nbsp;&nbsp;&nbsp;</label></td>
                         <td><input id="infantHospitalId" type="text"></td>
                     </tr> 
                     <tr>
-                        <td><label>Heart</label></td>
-                        <td><input id="mheart" type="text"></td>
+                        <td><label>To Hospital Name</label></td>
+                        <td><input id="hospitalName" type="text"></td>
                     </tr>
                     <tr>
-                        <td><label>Metabolism</label></td>
-                        <td><input id="metabolism" type="text"></td>
+                        <td><label>To Hospital Address</Address></label></td>
+                        <td><input id="hospitalAddress" type="text"></td>
                     </tr>
-                    <tr>
-                        <td><label>Mental Health</label></td>
-                        <td><input id="mentalhealth" type="text"></td>
-                    </tr>
-                    <tr>
-                        <td><label>Blood Pressure</label></td>
-                        <td><input id="bp" type="text"></td>
-                    </tr>
-                   
                 </table>
     
-            <button class="btn btn-primary" type="button" onclick="postMotherHealthData()" value="Submit" style="margin-left: 100px;margin-top: 20px;">Submit</button><br>
-            <button class="btn btn-primary" onclick="location.href = 'index.html'"><i class="fa fa-home"></i> Home</button>
+            <button class ="btn btn-primary" type="button" onclick="postTransferData()" value="Submit" style="margin-left: 125px;margin-top: 20px;margin-right: 481px;margin-bottom: 6px;">Transfer</button><br>
+    </div>
+    <div  style="margin-top: -150px;margin-right:280px;margin-left: 447px;"><br>
+        <table>
+               <tr>
+                   <td><label>Infant Hospital Id &nbsp;&nbsp;&nbsp;</label></td>
+                   <td><input id="infantId" type="text"></td>
+               </tr> 
+           </table>
+<br><br>
+       <button class ="btn btn-primary" type="button" onclick="postDischargeData()" value="Submit" style="margin-left: 134px;margin-top: 16px;margin-bottom: 6px;">Discharge</button><br><br>
+       <button class="btn btn-primary" onclick="location.href = 'index.html'"><i class="fa fa-home"></i> Home</button>
 
-    </div>
-    </div>
-    </div>
-    </div>
+</div>
+    </div></div></div>
 </body>
 </html>

@@ -1,34 +1,35 @@
 var request = new XMLHttpRequest()
 
-function getData(){
-    console.log('enterrr')
-    var type = "1"
-    var infantId = "eeee"
-    var infantFname =""
-    var infantLName =""
-    // var dat={type:"JESTIN",infantId:"rttt"}
-request.open('GET', 'http://localhost:5000/getInfantData?type='+type+'&Id='+infantId+'&Fname='+infantFname+'&LName='+infantLName+'', true)
+//TRANSFER INFANTS
+function postTransferData(){
+    alert("Submitted successfuly");
+    var InfantHospitalId = document.getElementById("infantHospitalId").value;
+    var ToHospitalName = document.getElementById("hospitalName").value;
+    var ToHospitalAddress = document.getElementById("hospitalAddress").value;
 
-request.onload = function() {
-  // Begin accessing JSON data here
-//   var data = JSON.parse(this.response)
+ 
+    request.open('POST', 'http://localhost:5000/transferInfant?InfantHospitalId='+InfantHospitalId+'&ToHospitalName='+ToHospitalName+
+    '&ToHospitalAddress='+ToHospitalAddress+'', true)
 
-//   if (request.status >= 200 && request.status < 400) {
-//     data.forEach(movie => {
-//       console.log(movie.title)
-//     })
-//   } else {
-//     console.log('error')
-//   }
+    request.send()
 }
 
-request.send()
 
+//DISCHARGE INFANTS
+function postDischargeData(){
+    alert("Submitted successfuly");
+    var InfantHospitalId = document.getElementById("infantId").value;
+   
+
+ 
+    request.open('POST','http://localhost:5000/dischargeInfant?InfantHospitalId='+InfantHospitalId+'', true)
+
+    request.send()
 }
 
 // INSERTING AND UPDATING INFANT AND PARENTS DETAILS
 function postInfantBirthData(){
- 
+    alert("Submitted successfuly");
     var InfantHospitalId = document.getElementById("infantHospitalId").value;
     var InfantFirstName = document.getElementById("infantFName").value;
     var InfantLastName = document.getElementById("infantLName").value;
@@ -51,7 +52,7 @@ function postInfantBirthData(){
 
 //INSERTING AND UPDATING INFANT DEATH DETAILS
 function postInfantDeathData(){
- 
+    alert("Submitted successfuly");
     var InfantHospitalId = document.getElementById("infantHospitalId").value;
     var DeathDateTime = document.getElementById("deathDate").value;
     var Reason = document.getElementById("reason").value;
@@ -65,7 +66,7 @@ function postInfantDeathData(){
 
 //INSERTING AND UPDATING INFANT HEALTH DETAILS
 function postInfantHealthData(){
- 
+    alert("Submitted successfuly");
     var InfantHospitalId = document.getElementById("infantHospitalId").value;
     var Eyes = document.getElementById("eyes").value;
     var Hearing = document.getElementById("hearing").value;
@@ -85,7 +86,7 @@ function postInfantHealthData(){
 
 //INSERTING AND UPDATING MOTHER HEALTH DETAILS
 function postMotherHealthData(){
- 
+    alert("Submitted successfuly");
     var InfantHospitalId = document.getElementById("infantHospitalId").value;
     var MotherHeart = document.getElementById("mheart").value;
     var MotherMetabolism = document.getElementById("metabolism").value;
@@ -102,7 +103,7 @@ function postMotherHealthData(){
 
 //INSERTING AND UPDATING MOTHER DEATH DETAILS
 function postMotherDeathData(){
- 
+    alert("Submitted successfuly");
     var InfantHospitalId = document.getElementById("infantHospitalId").value;
     var MotherDeathDate = document.getElementById("motherdeathdate").value;
     var MotherDeathReason = document.getElementById("motherreason").value;

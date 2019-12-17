@@ -2,16 +2,53 @@
     <title>
         Add Details
     </title>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+.container{
+    border: 1px solid black;
+}
+.bg-img {
+  /* The image used */
+  background-image: url("images/new1.jpg");
+
+  /* Control the height of the image */
+  min-height: 380px;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+        
+        </style>
     <body>
     <div class="container">
-    
-        <form action="http://localhost:3000/" method="POST" style="text-align: left;margin-top: 20px;margin-left: 20px;">
-            <br><button type="button" onclick="location.href = 'AddInfantBirth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT BIRTH DETAILS</button><br><br>
-                <button type="button" onclick="location.href = 'AddInfantHealth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT HEALTH DETAILS</button><br><br>
-                <button type="button" onclick="location.href = 'AddMotherHealth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT MOTHER HEALTH DETAILS</button><br><br>
-                <button type="button" onclick="location.href = 'AddInfantDeath.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT DEATH DETAILS</button><br><br>
-                <button type="button" onclick="location.href = 'AddMotherDeath.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT MOTHER DEATH DETAILS</button>    
-        </form>
+        <div class="panel panel-default">
+            <div class="panel-body bg-img" >
+                <h1 style="color:white;text-align:left;margin-top: 20px;margin-left: 20px;">SERVICES</h1><BR>
+
+                <form action="http://localhost:3000/" method="POST" style="text-align: left;margin-top: 20px;margin-left: 20px;">
+                    <br><button class="btn btn-primary" type="button" onclick="location.href = 'AddInfantBirth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT BIRTH DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'AddInfantHealth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT HEALTH DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'AddMotherHealth.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT MOTHER HEALTH DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'AddInfantDeath.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT DEATH DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'TransferDischarge.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">TRANSFER - DISCHARGE DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'Report.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">REPORTS DETAILS</button><br><br>
+                    <button class="btn btn-primary" type="button" onclick="location.href = 'AddMotherDeath.html'" style="font: bold 14px Arial; width: 330px;height: 40px;">ADD/EDIT INFANT MOTHER DEATH DETAILS</button><br><br>
+
+
+                </form>
+                <button class="btn btn-primary" onclick="location.href='index.html'"><i class="fa fa-home"></i> Home</button>
+
+            </div>
+        </div>
     </div>
 </body>
 </html>
